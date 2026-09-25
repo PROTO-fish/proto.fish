@@ -64,6 +64,7 @@
         margin-bottom: 24px;
       }
       .term .prompt { font-weight: 900; }
+      .term.next { position: relative; z-index: 1; margin: 24px 0 0; display: inline-block; background: var(--paper); padding-right: 8px; }
       .term .cursor { animation: blink 1s steps(1) infinite; }
       @keyframes blink { 50% { opacity: 0; } }
       @media (prefers-reduced-motion: reduce) { .term .cursor { animation: none; } }
@@ -172,7 +173,7 @@
     <p class="tagline">A little tank of playful code.</p>
 
     <main>
-      <h2 class="term"><span class="prompt">&gt;</span> ls ~/projects<span class="cursor" aria-hidden="true">_</span></h2>
+      <h2 class="term"><span class="prompt">&gt;</span> ls ~/projects</h2>
       <div class="projects">
         <a class="project" href="https://slashfacts.proto.fish">
           <img src="slashfacts.png" alt="" />
@@ -191,6 +192,7 @@
           </div>
         </a>
       </div>
+      <p class="term next" aria-hidden="true"><span class="prompt">&gt;</span> <span class="cursor">_</span></p>
     </main>
 
     <div class="tank" aria-hidden="true"></div>
