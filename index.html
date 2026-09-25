@@ -55,6 +55,17 @@
       .gh { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; }
       .gh svg { width: 20px; height: 20px; }
       .gh:hover, .gh:focus-visible { text-decoration: underline; }
+      .term {
+        font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+        font-size: 1.125rem;
+        font-weight: 700;
+        letter-spacing: 0;
+        text-transform: none;
+      }
+      .term .prompt { font-weight: 900; }
+      .term .cursor { animation: blink 1s steps(1) infinite; }
+      @keyframes blink { 50% { opacity: 0; } }
+      @media (prefers-reduced-motion: reduce) { .term .cursor { animation: none; } }
       .lede {
         font-size: clamp(1.25rem, 3.5vw, 1.75rem);
         font-weight: 800;
@@ -120,7 +131,7 @@
     </header>
 
     <main>
-      <h2>Projects</h2>
+      <h2 class="term"><span class="prompt">&gt;</span> ls projects/<span class="cursor" aria-hidden="true">_</span></h2>
       <a class="project" href="https://slashfacts.proto.fish">
         <img src="slashfacts.png" alt="" />
         <div>
