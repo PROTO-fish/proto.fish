@@ -106,9 +106,28 @@
       }
       .project p { font-weight: 600; font-size: 0.9375rem; margin-top: 6px; line-height: 1.35; }
       .links { margin-top: 8px; font-size: 0.9375rem; font-weight: 800; display: flex; flex-wrap: wrap; gap: 8px 20px; }
-      footer {
+      .tank {
         margin-top: auto;
-        padding-top: 48px;
+        position: relative;
+        height: 180px;
+        overflow: hidden;
+        border: 3px solid var(--ink);
+        border-top-style: dashed;
+        font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+        font-size: 16px;
+        line-height: 1;
+        white-space: pre;
+        user-select: none;
+      }
+      .tank span { position: absolute; top: 0; left: 0; will-change: transform; font-weight: 700; }
+      .tank .bubble { opacity: 0.8; }
+      .tank .sand {
+        position: absolute; left: 0; right: 0; bottom: 0; top: auto;
+        overflow: hidden; font-weight: 700;
+      }
+      .tank .weed { top: auto; bottom: 16px; line-height: 1; }
+      footer {
+        padding-top: 24px;
         font-weight: 700;
         display: flex;
         flex-wrap: wrap;
@@ -154,6 +173,8 @@
       </div>
     </main>
 
+    <div class="tank" aria-hidden="true"></div>
+
     <footer>
       <span>© PROTO/fish</span>
       <a class="gh" href="https://github.com/PROTO-fish">
@@ -163,5 +184,139 @@
         GitHub
       </a>
     </footer>
+    <script>
+      (() => {
+        const tank = document.querySelector('.tank');
+        if (!tank) return;
+        const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const SPECIES = [
+          ['><>', '<><'],
+          ['><))°>', '<°((><'],
+          ['><(((º>', '<º)))><'],
+          ['>=>', '<=<'],
+          ['><((({º>', '<º})))><'],
+        ];
+        const CH = 16;
+        let W = tank.clientWidth, H = tank.clientHeight;
+        const add = (text, cls) => {
+          const el = document.createElement('span');
+          el.textContent = text;
+          if (cls) el.className = cls;
+          tank.appendChild(el);
+          return el;
+        };
+
+        // Sand along the bottom.
+        const sand = add('', 'sand');
+        const fillSand = () => {
+          const n = Math.ceil(W / (CH * 0.6)) + 2;
+          let row = '';
+          for (let i = 0; i < n; i++) row += '_.,-~'[(i * 7 + (i >> 2)) % 5];
+          sand.textContent = row;
+        };
+        fillSand();
+
+        // Seaweed: stacks of ( and ) that sway by swapping sides.
+        const weeds = [];
+        const plantWeeds = () => {
+          weeds.forEach((w) => w.el.remove());
+          weeds.length = 0;
+          const count = Math.max(2, Math.floor(W / 140));
+          for (let i = 0; i < count; i++) {
+            const h = 3 + ((i * 5) % 4);
+            const el = add('', 'weed');
+            el.style.left = Math.round(((i + 0.5) / count) * W + ((i % 2) ? 18 : -22)) + 'px';
+            weeds.push({ el, h, phase: i });
+          }
+        };
+        const drawWeeds = (t) => {
+          for (const w of weeds) {
+            const flip = (Math.floor(t / 700) + w.phase) % 2;
+            let lines = [];
+            for (let k = 0; k < w.h; k++) lines.push((k + flip) % 2 ? ' )' : '( ');
+            w.el.textContent = lines.join('\n');
+          }
+        };
+        plantWeeds();
+
+        // Fish.
+        const fish = [];
+        const spawn = (i) => {
+          const kind = SPECIES[i % SPECIES.length];
+          const dir = Math.random() < 0.5 ? 1 : -1;
+          const el = add(dir > 0 ? kind[0] : kind[1]);
+          const f = {
+            el, kind, dir,
+            x: Math.random() * W,
+            y: 12 + Math.random() * (H - 70),
+            speed: 18 + Math.random() * 34,
+            bob: Math.random() * Math.PI * 2,
+            nextBubble: 1 + Math.random() * 4,
+          };
+          fish.push(f);
+        };
+        const fishCount = Math.max(4, Math.min(9, Math.floor(W / 110)));
+        for (let i = 0; i < fishCount; i++) spawn(i);
+
+        // Bubbles.
+        const bubbles = [];
+        const blow = (x, y) => {
+          const el = add('o', 'bubble');
+          bubbles.push({ el, x, y, age: 0 });
+        };
+
+        const place = (el, x, y) => { el.style.transform = `translate(${x}px, ${y}px)`; };
+
+        const render = (t, dt) => {
+          for (const f of fish) {
+            f.x += f.dir * f.speed * dt;
+            const w = f.el.offsetWidth || 60;
+            if (f.dir > 0 && f.x > W + 10) { f.x = -w - 10; f.y = 12 + Math.random() * (H - 70); }
+            if (f.dir < 0 && f.x < -w - 10) { f.x = W + 10; f.y = 12 + Math.random() * (H - 70); }
+            // Now and then a fish turns around mid-tank.
+            if (Math.random() < dt * 0.04) {
+              f.dir = -f.dir;
+              f.el.textContent = f.dir > 0 ? f.kind[0] : f.kind[1];
+            }
+            f.bob += dt * 1.6;
+            place(f.el, f.x, f.y + Math.sin(f.bob) * 3);
+            f.nextBubble -= dt;
+            if (f.nextBubble <= 0) {
+              blow(f.dir > 0 ? f.x + w : f.x - 8, f.y - 4);
+              f.nextBubble = 2 + Math.random() * 5;
+            }
+          }
+          for (let i = bubbles.length - 1; i >= 0; i--) {
+            const b = bubbles[i];
+            b.age += dt;
+            b.y -= 26 * dt;
+            b.x += Math.sin(b.age * 5) * 0.4;
+            if (b.age > 0.9) b.el.textContent = b.age > 1.8 ? '.' : '°';
+            if (b.y < -10) { b.el.remove(); bubbles.splice(i, 1); continue; }
+            place(b.el, b.x, b.y);
+          }
+          drawWeeds(t);
+        };
+
+        let last = performance.now();
+        const loop = (now) => {
+          const dt = Math.min(0.05, (now - last) / 1000);
+          last = now;
+          render(now, dt);
+          requestAnimationFrame(loop);
+        };
+        if (still) {
+          render(0, 0);
+        } else {
+          requestAnimationFrame(loop);
+        }
+
+        window.addEventListener('resize', () => {
+          W = tank.clientWidth; H = tank.clientHeight;
+          fillSand(); plantWeeds();
+          if (still) render(0, 0);
+        });
+      })();
+    </script>
   </body>
 </html>
