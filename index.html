@@ -109,10 +109,10 @@
       .tank {
         margin-top: auto;
         position: relative;
-        height: 180px;
+        height: 220px;
         overflow: hidden;
         border: 3px solid var(--ink);
-        border-top-style: dashed;
+        border-top: none;
         font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
         font-size: 16px;
         line-height: 1;
@@ -125,6 +125,7 @@
         position: absolute; left: 0; right: 0; bottom: 0; top: auto;
         overflow: hidden; font-weight: 700;
       }
+      .tank .surface { left: -16px; right: -16px; overflow: hidden; font-weight: 700; }
       .tank .weed { top: auto; bottom: 16px; line-height: 1; }
       footer {
         padding-top: 24px;
@@ -206,6 +207,16 @@
           return el;
         };
 
+        // Air above, water below: the glass walls rise past the surface.
+        const SURFACE = 40;
+        const surface = add('', 'surface');
+        const fillSurface = () => {
+          surface.textContent = '~'.repeat(Math.ceil(W / (CH * 0.6)) + 6);
+        };
+        fillSurface();
+        const waterTop = () => SURFACE + 18;
+        const depth = () => waterTop() + Math.random() * (H - waterTop() - 64);
+
         // Sand along the bottom.
         const sand = add('', 'sand');
         const fillSand = () => {
@@ -248,7 +259,7 @@
           const f = {
             el, kind, dir,
             x: Math.random() * W,
-            y: 12 + Math.random() * (H - 70),
+            y: depth(),
             speed: 18 + Math.random() * 34,
             bob: Math.random() * Math.PI * 2,
             nextBubble: 1 + Math.random() * 4,
@@ -271,8 +282,8 @@
           for (const f of fish) {
             f.x += f.dir * f.speed * dt;
             const w = f.el.offsetWidth || 60;
-            if (f.dir > 0 && f.x > W + 10) { f.x = -w - 10; f.y = 12 + Math.random() * (H - 70); }
-            if (f.dir < 0 && f.x < -w - 10) { f.x = W + 10; f.y = 12 + Math.random() * (H - 70); }
+            if (f.dir > 0 && f.x > W + 10) { f.x = -w - 10; f.y = depth(); }
+            if (f.dir < 0 && f.x < -w - 10) { f.x = W + 10; f.y = depth(); }
             // Now and then a fish turns around mid-tank.
             if (Math.random() < dt * 0.04) {
               f.dir = -f.dir;
@@ -292,10 +303,11 @@
             b.y -= 26 * dt;
             b.x += Math.sin(b.age * 5) * 0.4;
             if (b.age > 0.9) b.el.textContent = b.age > 1.8 ? '.' : '°';
-            if (b.y < -10) { b.el.remove(); bubbles.splice(i, 1); continue; }
+            if (b.y < SURFACE + 4) { b.el.remove(); bubbles.splice(i, 1); continue; }
             place(b.el, b.x, b.y);
           }
           drawWeeds(t);
+          place(surface, Math.sin(t / 900) * 5, SURFACE);
         };
 
         let last = performance.now();
@@ -313,7 +325,7 @@
 
         window.addEventListener('resize', () => {
           W = tank.clientWidth; H = tank.clientHeight;
-          fillSand(); plantWeeds();
+          fillSurface(); fillSand(); plantWeeds();
           if (still) render(0, 0);
         });
       })();
