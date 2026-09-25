@@ -109,10 +109,9 @@
       .tank {
         margin-top: auto;
         position: relative;
-        height: 220px;
+        height: 180px;
         overflow: hidden;
-        border: 3px solid var(--ink);
-        border-top: none;
+        border-bottom: 3px solid var(--ink);
         font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
         font-size: 16px;
         line-height: 1;
@@ -125,7 +124,6 @@
         position: absolute; left: 0; right: 0; bottom: 0; top: auto;
         overflow: hidden; font-weight: 700;
       }
-      .tank .surface { left: -16px; right: -16px; overflow: hidden; font-weight: 700; }
       .tank .weed { top: auto; bottom: 16px; line-height: 1; }
       footer {
         padding-top: 24px;
@@ -207,14 +205,7 @@
           return el;
         };
 
-        // Air above, water below: the glass walls rise past the surface.
-        const SURFACE = 40;
-        const surface = add('', 'surface');
-        const fillSurface = () => {
-          surface.textContent = '~'.repeat(Math.ceil(W / (CH * 0.6)) + 6);
-        };
-        fillSurface();
-        const waterTop = () => SURFACE + 18;
+        const waterTop = () => 14;
         const depth = () => waterTop() + Math.random() * (H - waterTop() - 64);
 
         // Sand along the bottom.
@@ -303,11 +294,10 @@
             b.y -= 26 * dt;
             b.x += Math.sin(b.age * 5) * 0.4;
             if (b.age > 0.9) b.el.textContent = b.age > 1.8 ? '.' : '°';
-            if (b.y < SURFACE + 4) { b.el.remove(); bubbles.splice(i, 1); continue; }
+            if (b.y < -10) { b.el.remove(); bubbles.splice(i, 1); continue; }
             place(b.el, b.x, b.y);
           }
           drawWeeds(t);
-          place(surface, Math.sin(t / 900) * 5, SURFACE);
         };
 
         let last = performance.now();
@@ -325,7 +315,7 @@
 
         window.addEventListener('resize', () => {
           W = tank.clientWidth; H = tank.clientHeight;
-          fillSurface(); fillSand(); plantWeeds();
+          fillSand(); plantWeeds();
           if (still) render(0, 0);
         });
       })();
