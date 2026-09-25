@@ -7,7 +7,7 @@
     <meta name="description" content="PROTO/fish builds small, focused, open-source apps. First up: SlashFacts, a multiplication-facts trainer." />
     <meta property="og:title" content="PROTO/fish" />
     <meta property="og:description" content="Small, focused, open-source apps." />
-    <meta name="theme-color" content="#ffffff" />
+    <meta name="theme-color" content="#000000" />
     <meta property="og:image" content="https://proto.fish/icon-512.png" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" href="/logo.svg" type="image/svg+xml" />
@@ -21,10 +21,8 @@
         font-display: swap;
         src: url('fonts/archivo-latin.woff2') format('woff2');
       }
-      :root { --ink: #000; --paper: #fff; }
-      @media (prefers-color-scheme: dark) {
-        :root { --ink: #fff; --paper: #000; }
-      }
+      /* Palette from the Reachy Mini Sonos Space: black, white, and two accents. */
+      :root { --ink: #fff; --paper: #000; --sage: #6ea37c; --terracotta: #c96a45; }
       * { box-sizing: border-box; margin: 0; }
       html { background: var(--paper); color: var(--ink); }
       body {
@@ -64,6 +62,7 @@
         margin-bottom: 24px;
       }
       .term .prompt { font-weight: 900; }
+      .mark .slash { color: var(--sage); }
       .term.next { position: relative; z-index: 1; margin: 24px 0 0; display: inline-block; background: var(--paper); padding-right: 8px; }
       .term .cursor { animation: blink 1s steps(1) infinite; }
       @keyframes blink { 50% { opacity: 0; } }
@@ -92,26 +91,25 @@
         text-decoration: none;
         background: var(--paper);
       }
-      .project:hover, .project:focus-visible { background: var(--ink); color: var(--paper); }
-      .project:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+      .project:hover, .project:focus-visible { border-color: var(--sage); }
+      .project:focus-visible { outline: 3px solid var(--terracotta); outline-offset: 4px; }
       .action {
         display: inline-block;
         margin-top: 10px;
         padding: 5px 10px;
-        border: 2px solid currentColor;
+        border: 2px solid var(--sage);
+        background: var(--sage);
+        color: #000;
         font-size: 0.875rem;
         font-weight: 900;
         letter-spacing: 0.04em;
         text-transform: uppercase;
       }
-      .project:hover .action, .project:focus-visible .action { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+      .project:hover .action, .project:focus-visible .action { background: var(--terracotta); border-color: var(--terracotta); color: #000; }
       .project:hover img, .project:focus-visible img { filter: invert(1); }
       .project img { width: 64px; height: 64px; display: block; }
       .projects { display: grid; gap: 12px; }
-      @media (prefers-color-scheme: dark) {
-        .project img { filter: invert(1); }
-        .project:hover img, .project:focus-visible img { filter: none; }
-      }
+      .project img { filter: invert(1); }
       .project h3 {
         font-size: clamp(1.25rem, 4vw, 1.625rem);
         font-weight: 900;
@@ -145,6 +143,10 @@
         position: absolute; left: 0; right: 0; bottom: 0; top: auto;
         overflow: hidden; font-weight: 700;
       }
+      .tank .weed { color: var(--sage); }
+      .tank .sand { color: var(--terracotta); }
+      .tank .fish-t { color: var(--terracotta); }
+      .tank .fish-s { color: var(--sage); }
       .tank .weed { top: auto; bottom: 16px; line-height: 1; }
       footer {
         padding-top: 16px;
@@ -165,15 +167,15 @@
       <h1 class="mark">
         <svg class="logo" viewBox="315 396 625 436" fill="currentColor" aria-hidden="true">
           <path d="M315 396 601 625 315 832V738L472 625 315 501Z"/>
-          <rect x="618" y="750" width="322" height="82"/>
+          <rect x="618" y="750" width="322" height="82" fill="var(--terracotta)"/>
         </svg>
-        PROTO/fish
+        <span>PROTO<span class="slash">/</span>fish</span>
       </h1>
     </header>
     <p class="tagline">A little tank of playful code.</p>
 
     <main>
-      <h2 class="term"><span class="prompt">&gt;</span> ls ~/projects</h2>
+      <h2 class="term"><span class="prompt">&gt;</span> <span class="cmd">ls ~/projects</span></h2>
       <div class="projects">
         <a class="project" href="https://slashfacts.proto.fish">
           <img src="slashfacts.png" alt="" />
@@ -274,7 +276,7 @@
         const spawn = (i) => {
           const kind = SPECIES[(i * 3) % SPECIES.length];
           const dir = Math.random() < 0.5 ? 1 : -1;
-          const el = add(dir > 0 ? kind[0] : kind[1]);
+          const el = add(dir > 0 ? kind[0] : kind[1], i % 3 === 0 ? 'fish-t' : i % 3 === 1 ? 'fish-s' : '');
           const f = {
             el, kind, dir,
             x: Math.random() * W,
