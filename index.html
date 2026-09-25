@@ -129,7 +129,7 @@
         margin-top: -110px;
         z-index: 0;
         position: relative;
-        height: 300px;
+        flex: 1 0 300px;
         overflow: hidden;
         border-bottom: 3px solid var(--ink);
         font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
@@ -146,8 +146,7 @@
       }
       .tank .weed { top: auto; bottom: 16px; line-height: 1; }
       footer {
-        margin-top: auto;
-        padding-top: 24px;
+        padding-top: 16px;
         font-weight: 700;
         display: flex;
         flex-wrap: wrap;
@@ -170,7 +169,7 @@
         PROTO/fish
       </h1>
     </header>
-    <p class="tagline">Small experiments in play, robotics and code.</p>
+    <p class="tagline">A little tank of playful code.</p>
 
     <main>
       <h2 class="term"><span class="prompt">&gt;</span> ls ~/projects<span class="cursor" aria-hidden="true">_</span></h2>
@@ -216,6 +215,11 @@
           ['><(((º>', '<º)))><'],
           ['>=>', '<=<'],
           ['><((({º>', '<º})))><'],
+          ['>_', '_<'],
+          ['>_>', '<_<'],
+          ['><_>', '<_><'],
+          ['>>_', '_<<'],
+          ['>_))>', '<((_<'],
         ];
         const CH = 16;
         let W = tank.clientWidth, H = tank.clientHeight;
@@ -266,7 +270,7 @@
         // Fish.
         const fish = [];
         const spawn = (i) => {
-          const kind = SPECIES[i % SPECIES.length];
+          const kind = SPECIES[(i * 3) % SPECIES.length];
           const dir = Math.random() < 0.5 ? 1 : -1;
           const el = add(dir > 0 ? kind[0] : kind[1]);
           const f = {
@@ -279,7 +283,7 @@
           };
           fish.push(f);
         };
-        const fishCount = Math.max(4, Math.min(9, Math.floor(W / 110)));
+        const fishCount = Math.max(5, Math.min(11, Math.floor(W / 90)));
         for (let i = 0; i < fishCount; i++) spawn(i);
 
         // Bubbles.
