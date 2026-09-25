@@ -89,8 +89,21 @@
         border: 3px solid var(--ink);
         padding: 14px 16px;
         text-decoration: none;
+        background: var(--paper);
       }
-      .project:hover, .project:focus-visible { background: var(--ink); color: var(--paper); outline: none; }
+      .project:hover, .project:focus-visible { background: var(--ink); color: var(--paper); }
+      .project:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+      .action {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 5px 10px;
+        border: 2px solid currentColor;
+        font-size: 0.875rem;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .project:hover .action, .project:focus-visible .action { background: var(--paper); color: var(--ink); border-color: var(--paper); }
       .project:hover img, .project:focus-visible img { filter: invert(1); }
       .project img { width: 64px; height: 64px; display: block; }
       .projects { display: grid; gap: 12px; }
@@ -106,10 +119,17 @@
       }
       .project p { font-weight: 600; font-size: 0.9375rem; margin-top: 6px; line-height: 1.35; }
       .links { margin-top: 8px; font-size: 0.9375rem; font-weight: 800; display: flex; flex-wrap: wrap; gap: 8px 20px; }
+      .tagline {
+        margin-top: 12px;
+        font-size: clamp(1rem, 2.4vw, 1.25rem);
+        font-weight: 700;
+      }
+      .projects { position: relative; z-index: 1; }
       .tank {
-        margin-top: auto;
+        margin-top: -110px;
+        z-index: 0;
         position: relative;
-        height: 180px;
+        height: 300px;
         overflow: hidden;
         border-bottom: 3px solid var(--ink);
         font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
@@ -126,6 +146,7 @@
       }
       .tank .weed { top: auto; bottom: 16px; line-height: 1; }
       footer {
+        margin-top: auto;
         padding-top: 24px;
         font-weight: 700;
         display: flex;
@@ -149,6 +170,7 @@
         PROTO/fish
       </h1>
     </header>
+    <p class="tagline">Small experiments in play, robotics and code.</p>
 
     <main>
       <h2 class="term"><span class="prompt">&gt;</span> ls ~/projects<span class="cursor" aria-hidden="true">_</span></h2>
@@ -157,16 +179,16 @@
           <img src="slashfacts.png" alt="" />
           <div>
             <h3>/ FACTS</h3>
-            <p>Multiplication tables 2–9, answered with a single stroke. Know it or don't — six seconds to spit it out.</p>
-            <div class="links"><span>Play on the web →</span></div>
+            <p>Times tables 2–9, answered in one stroke. Know it or don't.</p>
+            <span class="action">Play on the web →</span>
           </div>
         </a>
         <a class="project" href="https://huggingface.co/spaces/cpoisson/reachy-mini-sonos-control">
           <img src="reachy-sonos.png" alt="" />
           <div>
             <h3>REACHY × SONOS</h3>
-            <p>Run your Sonos music system by talking to Reachy Mini — a voice app for Pollen Robotics' desktop robot.</p>
-            <div class="links"><span>Open on Hugging Face →</span></div>
+            <p>Run your Sonos by talking to Reachy Mini.</p>
+            <span class="action">Open on Hugging Face →</span>
           </div>
         </a>
       </div>
