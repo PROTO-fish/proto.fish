@@ -142,13 +142,6 @@
         94% { opacity: 0; }
       }
       @keyframes jolt { 0%, 87%, 100% { transform: none; } 88% { transform: translate(4px, -3px) skewX(-8deg); } 90% { transform: translate(-4px, 2px); } 92% { transform: none; } }
-      .glitchbar {
-        position: fixed; left: 0; right: 0; height: 6px; top: -12px; z-index: 5; pointer-events: none;
-        background: linear-gradient(transparent, rgba(110,163,124,.07) 40%, rgba(201,106,69,.09) 60%, transparent);
-        mix-blend-mode: screen; animation: sweep 30s linear infinite;
-      }
-      /* One quick, faint pass every 30 seconds. */
-      @keyframes sweep { 0% { top: -12px; } 6% { top: 100%; } 100% { top: 100%; } }
       body::after {
         content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 4;
         background: repeating-linear-gradient(transparent 0 2px, rgba(255,255,255,.022) 2px 3px);
@@ -158,8 +151,7 @@
       .project:hover img.raw { filter: drop-shadow(-3px 0 0 var(--terracotta)) drop-shadow(3px 0 0 var(--sage)) hue-rotate(20deg); }
       @keyframes shake { 0% { transform: translate(2px, 0); } 50% { transform: translate(-2px, 1px); } 100% { transform: none; } }
       @media (prefers-reduced-motion: reduce) {
-        .gl::before, .gl::after, .mark .logo, .glitchbar, .project:not(.playing):hover, .status .on::before { animation: none; }
-        .glitchbar { display: none; }
+        .gl::before, .gl::after, .mark .logo, .project:not(.playing):hover, .status .on::before { animation: none; }
       }
       .project h3 {
         font-size: clamp(1.25rem, 4vw, 1.625rem);
@@ -218,7 +210,6 @@
         <span class="gl" data-text="PROTO/fish">PROTO<span class="slash">/</span>fish</span>
       </h1>
     </header>
-    <div class="glitchbar" aria-hidden="true"></div>
     <p class="status"><span class="on">lab open</span><span>3 experiments</span><span>last update 2026-11-05</span></p>
 
     <main>
