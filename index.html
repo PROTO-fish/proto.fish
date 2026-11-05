@@ -26,7 +26,7 @@
         src: url('fonts/archivo-latin.woff2') format('woff2');
       }
       /* Palette from the Reachy Mini Sonos Space: black, white, and two accents. */
-      :root { --ink: #fff; --paper: #000; --sage: #6ea37c; --terracotta: #c96a45; }
+      :root { --ink: #fff; --paper: #000; --sage: #6ea37c; --terracotta: #c96a45; --dim: #8a8a8a; --rule: #4a4a4a; --faint: #3a3a3a; }
       * { box-sizing: border-box; margin: 0; }
       html { background: var(--paper); color: var(--ink); }
       body {
@@ -41,7 +41,7 @@
       }
       a { color: inherit; }
       header {
-        border-bottom: 4px solid var(--ink);
+        border-bottom: 1px solid var(--rule);
         padding-bottom: 12px;
       }
       .mark {
@@ -90,30 +90,76 @@
         grid-template-columns: auto minmax(0, 1fr);
         gap: 16px;
         align-items: center;
-        border: 3px solid var(--ink);
+        border: 1px solid var(--rule);
         padding: 14px 16px;
         text-decoration: none;
         background: var(--paper);
       }
-      .project:hover, .project:focus-visible { border-color: var(--sage); }
-      .project:focus-visible { outline: 3px solid var(--terracotta); outline-offset: 4px; }
-      .action {
-        display: inline-block;
-        margin-top: 10px;
-        padding: 5px 10px;
-        border: 2px solid var(--sage);
-        background: var(--sage);
-        color: #000;
-        font-size: 0.875rem;
-        font-weight: 900;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-      }
-      .project:hover .action, .project:focus-visible .action { background: var(--terracotta); border-color: var(--terracotta); color: #000; }
-      .project:hover img, .project:focus-visible img { filter: invert(1); }
-      .project img { width: 64px; height: 64px; display: block; }
+      .project:hover, .project:focus-visible, .project:focus-within { border-color: var(--sage); }
+      .project:focus-visible { outline: 2px solid var(--terracotta); outline-offset: 4px; }
+      .project img { width: 64px; height: 64px; display: block; filter: invert(1); }
       .projects { display: grid; gap: 12px; }
-      .project img { filter: invert(1); }
+      /* Full-colour artwork on black: never inverted. */
+      .project img.raw { filter: none; }
+      .mono, .meta, .chips, .status, .play { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; }
+      .project .meta { margin-top: 0; font-size: 0.75rem; color: var(--dim); display: flex; flex-wrap: wrap; gap: 2px 12px; margin-bottom: 4px; }
+      .meta .id { color: var(--ink); font-weight: 700; }
+      .meta .st { color: var(--sage); font-weight: 900; }
+      .meta .id.flick { color: var(--terracotta); }
+      .project .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+      .chips span { font-size: 0.6875rem; font-weight: 700; padding: 2px 7px; border: 1px solid var(--faint); color: var(--dim); text-transform: uppercase; letter-spacing: 0.04em; }
+      .play {
+        margin-top: 10px; padding: 5px 11px; border: 0; cursor: pointer;
+        background: var(--sage); color: #000;
+        font-size: 0.8125rem; font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase;
+      }
+      .play:hover, .play:focus-visible { background: var(--terracotta); }
+      .play:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+      .player { grid-column: 1 / -1; position: relative; aspect-ratio: 16 / 9; border: 1px solid var(--rule); background: #000; }
+      .player iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+      .status { margin-top: 12px; font-size: 0.8125rem; color: var(--dim); display: flex; flex-wrap: wrap; gap: 4px 16px; }
+      .status .on::before { content: '●'; color: var(--sage); margin-right: 6px; animation: pulse 2s infinite; }
+      @keyframes pulse { 50% { opacity: 0.3; } }
+
+      /* Glitches */
+      .gl { position: relative; display: inline-block; }
+      .gl::before, .gl::after { content: attr(data-text); position: absolute; inset: 0; pointer-events: none; opacity: 0; }
+      .gl::before { color: var(--sage); animation: tearA 4.2s infinite steps(1); }
+      .gl::after { color: var(--terracotta); animation: tearB 4.2s infinite steps(1); }
+      .mark .logo { animation: jolt 4.2s infinite steps(1); }
+      @keyframes tearA {
+        0%, 86%, 100% { opacity: 0; transform: none; clip-path: none; }
+        87% { opacity: 1; transform: translate(-6px, 2px); clip-path: inset(10% 0 55% 0); }
+        89% { opacity: 1; transform: translate(8px, -2px); clip-path: inset(60% 0 8% 0); }
+        91% { opacity: 1; transform: translate(-3px, 0); clip-path: inset(30% 0 40% 0); }
+        93% { opacity: 0; }
+      }
+      @keyframes tearB {
+        0%, 87%, 100% { opacity: 0; transform: none; clip-path: none; }
+        88% { opacity: 1; transform: translate(6px, -2px); clip-path: inset(45% 0 25% 0); }
+        90% { opacity: 1; transform: translate(-9px, 2px); clip-path: inset(5% 0 75% 0); }
+        92% { opacity: 1; transform: translate(4px, 0); clip-path: inset(70% 0 2% 0); }
+        94% { opacity: 0; }
+      }
+      @keyframes jolt { 0%, 87%, 100% { transform: none; } 88% { transform: translate(4px, -3px) skewX(-8deg); } 90% { transform: translate(-4px, 2px); } 92% { transform: none; } }
+      .glitchbar {
+        position: fixed; left: 0; right: 0; height: 18px; top: -24px; z-index: 5; pointer-events: none;
+        background: linear-gradient(transparent, rgba(110,163,124,.16) 40%, rgba(201,106,69,.2) 60%, transparent);
+        mix-blend-mode: screen; animation: sweep 9s linear infinite;
+      }
+      @keyframes sweep { 0% { top: -24px; } 16% { top: 100%; } 100% { top: 100%; } }
+      body::after {
+        content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 4;
+        background: repeating-linear-gradient(transparent 0 2px, rgba(255,255,255,.022) 2px 3px);
+      }
+      .project:not(.playing):hover { animation: shake .25s steps(2) 2; }
+      .project:hover img { filter: invert(1) drop-shadow(-3px 0 0 var(--terracotta)) drop-shadow(3px 0 0 var(--sage)); }
+      .project:hover img.raw { filter: drop-shadow(-3px 0 0 var(--terracotta)) drop-shadow(3px 0 0 var(--sage)) hue-rotate(20deg); }
+      @keyframes shake { 0% { transform: translate(2px, 0); } 50% { transform: translate(-2px, 1px); } 100% { transform: none; } }
+      @media (prefers-reduced-motion: reduce) {
+        .gl::before, .gl::after, .mark .logo, .glitchbar, .project:not(.playing):hover, .status .on::before { animation: none; }
+        .glitchbar { display: none; }
+      }
       .project h3 {
         font-size: clamp(1.25rem, 4vw, 1.625rem);
         font-weight: 900;
@@ -122,11 +168,6 @@
       }
       .project p { font-weight: 600; font-size: 0.9375rem; margin-top: 6px; line-height: 1.35; }
       .links { margin-top: 8px; font-size: 0.9375rem; font-weight: 800; display: flex; flex-wrap: wrap; gap: 8px 20px; }
-      .tagline {
-        margin-top: 12px;
-        font-size: clamp(1rem, 2.4vw, 1.25rem);
-        font-weight: 700;
-      }
       .projects { position: relative; z-index: 1; }
       .tank {
         margin-top: -110px;
@@ -173,28 +214,42 @@
           <path d="M315 396 601 625 315 832V738L472 625 315 501Z"/>
           <rect x="618" y="750" width="322" height="82" fill="var(--terracotta)"/>
         </svg>
-        <span>PROTO<span class="slash">/</span>fish</span>
+        <span class="gl" data-text="PROTO/fish">PROTO<span class="slash">/</span>fish</span>
       </h1>
     </header>
-    <p class="tagline">A little tank of playful code.</p>
+    <div class="glitchbar" aria-hidden="true"></div>
+    <p class="status"><span class="on">lab open</span><span>3 experiments</span><span>last update 2026-11-05</span></p>
 
     <main>
-      <h2 class="term"><span class="prompt">&gt;</span> <span class="cmd">ls ~/projects</span></h2>
+      <h2 class="term"><span class="prompt">&gt;</span> <span class="cmd">ls -t ~/experiments</span></h2>
       <div class="projects">
-        <a class="project" href="https://slashfacts.proto.fish">
-          <img src="slashfacts.png" alt="" />
+        <div class="project" id="exp-003">
+          <img class="raw" src="tangled-frequencies.png" alt="" />
           <div>
-            <h3>/ FACTS</h3>
-            <p>Times tables 2–9, answered in one stroke. Know it or don't.</p>
-            <span class="action">Play on the web →</span>
+            <p class="meta"><span class="id">EXP-003</span><span class="st">● RELEASED</span><span>2026-11</span><span>FILM</span></p>
+            <h3 class="scr">TANGLED FREQUENCIES</h3>
+            <p>An experimental music video, made with Remotion and Suno.</p>
+            <p class="chips"><span>Remotion</span><span>Suno</span></p>
+            <button type="button" class="play" aria-expanded="false" aria-controls="player-003">▶ Play</button>
           </div>
-        </a>
+          <div class="player" id="player-003" hidden></div>
+        </div>
         <a class="project" href="https://huggingface.co/spaces/cpoisson/reachy-mini-sonos-control">
           <img src="reachy-sonos.png" alt="" />
           <div>
-            <h3>REACHY × SONOS</h3>
+            <p class="meta"><span class="id">EXP-002</span><span class="st">● LIVE</span><span>2026-09</span><span>ROBOT</span></p>
+            <h3 class="scr">REACHY × SONOS</h3>
             <p>Control your Sonos system by talking to Reachy Mini.</p>
-            <span class="action">Open on Hugging Face →</span>
+            <p class="chips"><span>Reachy Mini</span><span>Hugging Face</span></p>
+          </div>
+        </a>
+        <a class="project" href="https://slashfacts.proto.fish">
+          <img src="slashfacts.png" alt="" />
+          <div>
+            <p class="meta"><span class="id">EXP-001</span><span class="st">● LIVE</span><span>2026-09</span><span>APP</span></p>
+            <h3 class="scr">/ FACTS</h3>
+            <p>Times tables 2–9, answered in one stroke. Know it or don't.</p>
+            <p class="chips"><span>Web</span></p>
           </div>
         </a>
       </div>
@@ -353,6 +408,67 @@
           fillSand(); plantWeeds();
           if (still) render(0, 0);
         });
+      })();
+    </script>
+    <script>
+      (() => {
+        const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // Inline video: nothing from YouTube loads until Play is pressed.
+        document.querySelectorAll('.play').forEach((btn) => {
+          const card = btn.closest('.project');
+          const slot = document.getElementById(btn.getAttribute('aria-controls'));
+          btn.addEventListener('click', () => {
+            const open = btn.getAttribute('aria-expanded') === 'true';
+            if (open) {
+              slot.replaceChildren(); slot.hidden = true;
+              btn.textContent = '▶ Play';
+            } else {
+              const f = document.createElement('iframe');
+              f.src = 'https://www.youtube-nocookie.com/embed/1hY2pKJE_qs?autoplay=1&rel=0';
+              f.title = 'Tangled Frequencies';
+              f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+              f.allowFullscreen = true;
+              slot.replaceChildren(f); slot.hidden = false;
+              btn.textContent = '■ Close';
+            }
+            btn.setAttribute('aria-expanded', String(!open));
+            card.classList.toggle('playing', !open);
+          });
+        });
+
+        if (still) return;
+
+        // Hovering a card scrambles its title into fish glyphs, then resolves it.
+        const GLYPHS = '<>/_º()~=#%01';
+        document.querySelectorAll('.project').forEach((card) => {
+          const t = card.querySelector('.scr');
+          if (!t) return;
+          const final = t.textContent;
+          t.setAttribute('aria-label', final);
+          let busy = false;
+          card.addEventListener('mouseenter', () => {
+            if (busy || card.classList.contains('playing')) return;
+            busy = true;
+            let frame = 0;
+            const id = setInterval(() => {
+              frame++;
+              t.textContent = [...final].map((c, i) => (c === ' ' || i < frame - 3 ? c : GLYPHS[Math.floor(Math.random() * GLYPHS.length)])).join('');
+              if (frame > final.length + 3) { clearInterval(id); t.textContent = final; busy = false; }
+            }, 35);
+          });
+        });
+
+        // Now and then an experiment ID flickers to hex.
+        setInterval(() => {
+          const ids = document.querySelectorAll('.meta .id');
+          const el = ids[Math.floor(Math.random() * ids.length)];
+          if (!el) return;
+          const orig = el.textContent;
+          el.textContent = '0x' + Math.floor(Math.random() * 0xffff).toString(16).toUpperCase().padStart(4, '0');
+          el.classList.add('flick');
+          setTimeout(() => { el.textContent = orig; el.classList.remove('flick'); }, 140);
+        }, 2600);
       })();
     </script>
   </body>
