@@ -147,8 +147,6 @@
         background: repeating-linear-gradient(transparent 0 2px, rgba(255,255,255,.022) 2px 3px);
       }
       .project:not(.playing):hover { animation: shake .25s steps(2) 2; }
-      .project:hover img { filter: invert(1) drop-shadow(-3px 0 0 var(--terracotta)) drop-shadow(3px 0 0 var(--sage)); }
-      .project:hover img.raw { filter: drop-shadow(-3px 0 0 var(--terracotta)) drop-shadow(3px 0 0 var(--sage)) hue-rotate(20deg); }
       @keyframes shake { 0% { transform: translate(2px, 0); } 50% { transform: translate(-2px, 1px); } 100% { transform: none; } }
       @media (prefers-reduced-motion: reduce) {
         .gl::before, .gl::after, .mark .logo, .project:not(.playing):hover, .status .on::before { animation: none; }
