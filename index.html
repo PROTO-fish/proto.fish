@@ -105,6 +105,7 @@
       .project .meta { margin-top: 0; font-size: 0.75rem; color: var(--dim); display: flex; flex-wrap: wrap; gap: 2px 12px; margin-bottom: 4px; }
       .meta .id { color: var(--ink); font-weight: 700; }
       .meta .st { color: var(--sage); font-weight: 900; }
+      .meta .st.exp { color: var(--terracotta); }
       .meta .id.flick { color: var(--terracotta); }
       .project .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
       .chips span { font-size: 0.6875rem; font-weight: 700; padding: 2px 7px; border: 1px solid var(--faint); color: var(--dim); text-transform: uppercase; letter-spacing: 0.04em; }
@@ -158,6 +159,8 @@
         line-height: 1;
       }
       .project p { font-weight: 600; font-size: 0.9375rem; margin-top: 6px; line-height: 1.35; }
+      .links { align-items: center; }
+      .links .play { margin-top: 0; }
       .links { margin-top: 8px; font-size: 0.9375rem; font-weight: 800; display: flex; flex-wrap: wrap; gap: 8px 20px; }
       .projects { position: relative; z-index: 1; }
       .tank {
@@ -208,7 +211,7 @@
         <span class="gl" data-text="PROTO/fish">PROTO<span class="slash">/</span>fish</span>
       </h1>
     </header>
-    <p class="status"><span class="on">lab open</span><span>4 experiments</span><span>last update 2026-11-06</span></p>
+    <p class="status"><span class="on">lab open</span><span>5 experiments</span><span>last update 2026-11-06</span></p>
 
     <main>
       <h2 class="term"><span class="prompt">&gt;</span> <span class="cmd">ls -t ~/experiments</span></h2>
@@ -234,6 +237,17 @@
             <button type="button" class="play" aria-expanded="false" aria-controls="player-003" data-video="1hY2pKJE_qs" data-title="Tangled Frequencies">▶ Play</button>
           </div>
           <div class="player" id="player-003" hidden></div>
+        </div>
+        <div class="project" id="exp-005">
+          <img class="raw" src="s2snoop.png" alt="" />
+          <div>
+            <p class="meta"><span class="id">EXP-005</span><span class="st exp">● EXPERIMENTAL</span><span>2026-10</span><span>TOOL</span></p>
+            <h3 class="scr">S2SNOOP</h3>
+            <p>Listen in on your voice agent: watch OpenAI Realtime and speech-to-speech sessions live, then replay them with aligned audio.</p>
+            <p class="chips"><span>Python</span><span>OpenAI Realtime</span><span>Speech-to-speech</span></p>
+            <p class="links"><button type="button" class="play" aria-expanded="false" aria-controls="player-005" data-video="FeTdXfUy-Gc" data-title="S2Snoop / Realtime Scope Demo" data-label="▶ Demo">▶ Demo</button><a href="https://github.com/cpoisson/s2snoop">Code on GitHub ↗</a></p>
+          </div>
+          <div class="player" id="player-005" hidden></div>
         </div>
         <a class="project" href="https://huggingface.co/spaces/cpoisson/reachy-mini-sonos-control">
           <img src="reachy-sonos.png" alt="" />
@@ -423,7 +437,7 @@
             const open = btn.getAttribute('aria-expanded') === 'true';
             if (open) {
               slot.replaceChildren(); slot.hidden = true;
-              btn.textContent = '▶ Play';
+              btn.textContent = btn.dataset.label || '▶ Play';
             } else {
               const f = document.createElement('iframe');
               f.src = `https://www.youtube-nocookie.com/embed/${btn.dataset.video}?autoplay=1&rel=0`;
