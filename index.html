@@ -96,7 +96,11 @@
         background: var(--paper);
       }
       .project:hover, .project:focus-visible, .project:focus-within { border-color: var(--sage); }
-      .project:focus-visible { outline: 2px solid var(--terracotta); outline-offset: 4px; }
+      .project:focus-visible, .project:has(.stretch:focus-visible) { outline: 2px solid var(--terracotta); outline-offset: 4px; }
+      .project { position: relative; }
+      .stretch { text-decoration: none; outline: none; }
+      .stretch::after { content: ''; position: absolute; inset: 0; }
+      .project p a, .project .play { position: relative; z-index: 1; }
       .project img { width: 64px; height: 64px; display: block; filter: invert(1); }
       .projects { display: grid; gap: 12px; }
       /* Full-colour artwork on black: never inverted. */
@@ -117,6 +121,8 @@
       .play:hover, .play:focus-visible { background: var(--terracotta); }
       .play:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
       .player { grid-column: 1 / -1; position: relative; aspect-ratio: 16 / 9; border: 1px solid var(--rule); background: #000; }
+      .project .player { z-index: 1; }
+      .player.short { aspect-ratio: 9 / 16; width: min(100%, 360px); justify-self: center; }
       .player iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
       .status { margin-top: 12px; font-size: 0.8125rem; color: var(--dim); display: flex; flex-wrap: wrap; gap: 4px 16px; }
       .status .on::before { content: '●'; color: var(--sage); margin-right: 6px; animation: pulse 2s infinite; }
@@ -249,24 +255,26 @@
           </div>
           <div class="player" id="player-003" hidden></div>
         </div>
-        <a class="project" href="https://huggingface.co/spaces/cpoisson/reachy-mini-sonos-control">
+        <div class="project">
           <img src="reachy-sonos.png" alt="" />
           <div>
             <p class="meta"><span class="id">EXP-001</span><span class="st">● LIVE</span><span>2026-09</span><span>ROBOT</span></p>
-            <h3 class="scr">REACHY × SONOS</h3>
+            <h3><a class="stretch scr" href="https://huggingface.co/spaces/cpoisson/reachy-mini-sonos-control">REACHY × SONOS</a></h3>
             <p>Control your Sonos system by talking to Reachy Mini.</p>
             <p class="chips"><span>Reachy Mini</span><span>Hugging Face</span></p>
           </div>
-        </a>
-        <a class="project" href="https://slashfacts.proto.fish">
+        </div>
+        <div class="project">
           <img src="slashfacts.png" alt="" />
           <div>
             <p class="meta"><span class="id">EXP-002</span><span class="st">● LIVE</span><span>2026-09</span><span>APP</span></p>
-            <h3 class="scr">/ FACTS</h3>
+            <h3><a class="stretch scr" href="https://slashfacts.proto.fish">/ FACTS</a></h3>
             <p>Times tables 2–9, answered in one stroke. Know it or don't.</p>
-            <p class="chips"><span>Web</span></p>
+            <p class="chips"><span>Expo</span><span>Web</span></p>
+            <button type="button" class="play" aria-expanded="false" aria-controls="player-002" data-video="m1Tn2aq8ODs" data-title="SlashFacts: multiplication tables in one slash" data-label="▶ Demo">▶ Demo</button>
           </div>
-        </a>
+          <div class="player short" id="player-002" hidden></div>
+        </div>
       </div>
       <p class="term next" aria-hidden="true"><span class="prompt">&gt;</span> <span class="cursor">_</span></p>
     </main>
