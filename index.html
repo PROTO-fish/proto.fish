@@ -208,11 +208,22 @@
         <span class="gl" data-text="PROTO/fish">PROTO<span class="slash">/</span>fish</span>
       </h1>
     </header>
-    <p class="status"><span class="on">lab open</span><span>3 experiments</span><span>last update 2026-11-05</span></p>
+    <p class="status"><span class="on">lab open</span><span>4 experiments</span><span>last update 2026-11-06</span></p>
 
     <main>
       <h2 class="term"><span class="prompt">&gt;</span> <span class="cmd">ls -t ~/experiments</span></h2>
       <div class="projects">
+        <div class="project" id="exp-004">
+          <img class="raw" src="rikki-dot.png" alt="" />
+          <div>
+            <p class="meta"><span class="id">EXP-004</span><span class="st">● RELEASED</span><span>2026-11</span><span>FILM</span></p>
+            <h3 class="scr">RIKKI DOT</h3>
+            <p>Rikki is a dot, and he's got something to say. A short animated film made with Rust, fframes, tellers.ai and Suno.</p>
+            <p class="chips"><span>Rust</span><span>fframes</span><span>tellers.ai</span><span>Suno</span></p>
+            <button type="button" class="play" aria-expanded="false" aria-controls="player-004" data-video="qD4uAPqt3Wo" data-title="Rikki Dot">▶ Play</button>
+          </div>
+          <div class="player" id="player-004" hidden></div>
+        </div>
         <div class="project" id="exp-003">
           <img class="raw" src="tangled-frequencies.png" alt="" />
           <div>
@@ -220,7 +231,7 @@
             <h3 class="scr">TANGLED FREQUENCIES</h3>
             <p>An experimental music video, made with Remotion and Suno.</p>
             <p class="chips"><span>Remotion</span><span>Suno</span></p>
-            <button type="button" class="play" aria-expanded="false" aria-controls="player-003">▶ Play</button>
+            <button type="button" class="play" aria-expanded="false" aria-controls="player-003" data-video="1hY2pKJE_qs" data-title="Tangled Frequencies">▶ Play</button>
           </div>
           <div class="player" id="player-003" hidden></div>
         </div>
@@ -415,8 +426,8 @@
               btn.textContent = '▶ Play';
             } else {
               const f = document.createElement('iframe');
-              f.src = 'https://www.youtube-nocookie.com/embed/1hY2pKJE_qs?autoplay=1&rel=0';
-              f.title = 'Tangled Frequencies';
+              f.src = `https://www.youtube-nocookie.com/embed/${btn.dataset.video}?autoplay=1&rel=0`;
+              f.title = btn.dataset.title;
               f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
               f.allowFullscreen = true;
               slot.replaceChildren(f); slot.hidden = false;
